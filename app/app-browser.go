@@ -9,10 +9,11 @@ package app
 
 import (
 	"fmt"
-	"github.com/g3n/engine/renderer"
-	"github.com/g3n/engine/window"
 	"syscall/js"
 	"time"
+
+	"github.com/g3n/engine/renderer"
+	"github.com/g3n/engine/window"
 )
 
 // Default canvas id
@@ -31,7 +32,7 @@ type Application struct {
 }
 
 // App returns the Application singleton, creating it the first time.
-func App(width, height int, title string) *Application {
+func App(width, height int, title string) (*Application, error) {
 
 	// Return singleton if already created
 	if a != nil {
@@ -41,7 +42,7 @@ func App(width, height int, title string) *Application {
 	// Initialize window
 	err := window.Init(canvasId)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("window.Init:%v", err)
 	}
 	a.IWindow = window.Get()
 	// TODO audio setup here
@@ -50,9 +51,9 @@ func App(width, height int, title string) *Application {
 	a.renderer = renderer.NewRenderer(a.Gls())
 	err = a.renderer.AddDefaultShaders()
 	if err != nil {
-		panic(fmt.Errorf("AddDefaultShaders:%v", err))
+		return nil, fmt.Errorf("AddDefaultShaders:%v", err)
 	}
-	return a
+	return a, nil
 }
 
 // Run starts the update loop.
