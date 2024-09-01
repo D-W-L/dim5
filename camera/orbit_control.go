@@ -66,8 +66,11 @@ type OrbitControl struct {
 }
 
 // NewOrbitControl creates and returns a pointer to a new orbit control for the specified camera.
-func NewOrbitControl(cam *Camera) *OrbitControl {
-
+func NewOrbitControl(cam *Camera) (*OrbitControl, error) {
+	manager, err := gui.Manager()
+	if err != nil {
+		return nil, err
+	}
 	oc := new(OrbitControl)
 	oc.Dispatcher.Initialize()
 	oc.cam = cam
@@ -88,24 +91,28 @@ func NewOrbitControl(cam *Camera) *OrbitControl {
 	oc.KeyPanSpeed = 35.0
 
 	// Subscribe to events
-	gui.Manager().SubscribeID(window.OnMouseUp, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(window.OnMouseDown, &oc, oc.onMouse)
-	gui.Manager().SubscribeID(window.OnScroll, &oc, oc.onScroll)
-	gui.Manager().SubscribeID(window.OnKeyDown, &oc, oc.onKey)
-	gui.Manager().SubscribeID(window.OnKeyRepeat, &oc, oc.onKey)
+	manager.SubscribeID(window.OnMouseUp, &oc, oc.onMouse)
+	manager.SubscribeID(window.OnMouseDown, &oc, oc.onMouse)
+	manager.SubscribeID(window.OnScroll, &oc, oc.onScroll)
+	manager.SubscribeID(window.OnKeyDown, &oc, oc.onKey)
+	manager.SubscribeID(window.OnKeyRepeat, &oc, oc.onKey)
 	oc.SubscribeID(window.OnCursor, &oc, oc.onCursor)
 
-	return oc
+	return oc, nil
 }
 
 // Dispose unsubscribes from all events.
 func (oc *OrbitControl) Dispose() {
-
-	gui.Manager().UnsubscribeID(window.OnMouseUp, &oc)
-	gui.Manager().UnsubscribeID(window.OnMouseDown, &oc)
-	gui.Manager().UnsubscribeID(window.OnScroll, &oc)
-	gui.Manager().UnsubscribeID(window.OnKeyDown, &oc)
-	gui.Manager().UnsubscribeID(window.OnKeyRepeat, &oc)
+	manager, err := gui.Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
+	manager.UnsubscribeID(window.OnMouseUp, &oc)
+	manager.UnsubscribeID(window.OnMouseDown, &oc)
+	manager.UnsubscribeID(window.OnScroll, &oc)
+	manager.UnsubscribeID(window.OnKeyDown, &oc)
+	manager.UnsubscribeID(window.OnKeyRepeat, &oc)
 	oc.UnsubscribeID(window.OnCursor, &oc)
 }
 
@@ -121,7 +128,7 @@ func (oc *OrbitControl) Target() math32.Vector3 {
 	return oc.target
 }
 
-//Set camera orbit target Vector3
+// Set camera orbit target Vector3
 func (oc *OrbitControl) SetTarget(v math32.Vector3) {
 	oc.target = v
 }
@@ -216,9 +223,15 @@ func (oc *OrbitControl) onMouse(evname string, ev interface{}) {
 		return
 	}
 
+	manager, err := gui.Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
+
 	switch evname {
 	case window.OnMouseDown:
-		gui.Manager().SetCursorFocus(oc)
+		manager.SetCursorFocus(oc)
 		mev := ev.(*window.MouseEvent)
 		switch mev.Button {
 		case window.MouseButtonLeft: // Rotate
@@ -238,7 +251,7 @@ func (oc *OrbitControl) onMouse(evname string, ev interface{}) {
 			}
 		}
 	case window.OnMouseUp:
-		gui.Manager().SetCursorFocus(nil)
+		manager.SetCursorFocus(nil)
 		oc.state = stateNone
 	}
 }
@@ -321,9 +334,13 @@ func (oc *OrbitControl) onKey(evname string, ev interface{}) {
 }
 
 // winSize returns the window height or width based on the camera reference axis.
+// Returns -1.0 if window is not initialized
 func (oc *OrbitControl) winSize() float32 {
-
-	width, size := window.Get().GetSize()
+	win, err := window.Get()
+	if err != nil {
+		return -1.0
+	}
+	width, size := win.GetSize()
 	if oc.cam.Axis() == Horizontal {
 		size = width
 	}

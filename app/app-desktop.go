@@ -33,7 +33,7 @@ func App(width, height int, title string) (*Application, error) {
 
 	// Return singleton if already created
 	if a != nil {
-		return a
+		return a, nil
 	}
 	a = new(Application)
 	// Initialize window
@@ -41,7 +41,10 @@ func App(width, height int, title string) (*Application, error) {
 	if err != nil {
 		return nil, fmt.Errorf("window.Init:%v", err)
 	}
-	a.IWindow = window.Get()
+	a.IWindow, err = window.Get()
+	if err != nil {
+		return nil, err
+	}
 	a.openDefaultAudioDevice()         // Set up audio
 	a.keyState = window.NewKeyState(a) // Create KeyState
 	// Create renderer and add default shaders

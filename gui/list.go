@@ -417,12 +417,16 @@ func (li *List) onKeyEvent(evname string, ev interface{}) {
 
 // setSelection sets the selected state of the specified item
 // updating the visual appearance of the list if necessary
-func (li *List) setSelection(litem *ListItem, state bool, force bool, dispatch bool) {
+func (li *List) setSelection(litem *ListItem, state bool, force bool, dispatch bool) error {
+	manager, err := Manager()
+	if err != nil {
+		return err
 
-	Manager().SetKeyFocus(li)
+	}
+	manager.SetKeyFocus(li)
 	// If already at this state, nothing to do
 	if litem.selected == state && !force {
-		return
+		return nil
 	}
 	litem.SetSelected(state)
 
@@ -439,6 +443,7 @@ func (li *List) setSelection(litem *ListItem, state bool, force bool, dispatch b
 	if dispatch {
 		li.Dispatch(OnChange, nil)
 	}
+	return nil
 }
 
 // update updates the visual state the list and its items

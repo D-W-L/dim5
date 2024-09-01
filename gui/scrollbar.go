@@ -202,7 +202,11 @@ func (sb *ScrollBar) applyStyle(sbs *ScrollBarStyle) {
 
 // onMouse receives subscribed mouse events for the scroll bar button
 func (button *scrollBarButton) onMouse(evname string, ev interface{}) {
-
+	manager, err := Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 	e := ev.(*window.MouseEvent)
 	if e.Button != window.MouseButtonLeft {
 		return
@@ -212,10 +216,10 @@ func (button *scrollBarButton) onMouse(evname string, ev interface{}) {
 		button.pressed = true
 		button.mouseX = e.Xpos
 		button.mouseY = e.Ypos
-		Manager().SetCursorFocus(button)
+		manager.SetCursorFocus(button)
 	case OnMouseUp:
 		button.pressed = false
-		Manager().SetCursorFocus(nil)
+		manager.SetCursorFocus(nil)
 	default:
 		return
 	}

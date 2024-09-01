@@ -114,7 +114,11 @@ func (s *Splitter) onResize(evname string, ev interface{}) {
 
 // onMouse receives subscribed mouse events over the spacer panel
 func (s *Splitter) onMouse(evname string, ev interface{}) {
-
+	manager, err := Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 	mev := ev.(*window.MouseEvent)
 	if mev.Button != window.MouseButtonLeft {
 		return
@@ -127,27 +131,36 @@ func (s *Splitter) onMouse(evname string, ev interface{}) {
 		} else {
 			s.posLast = mev.Ypos
 		}
-		Manager().SetCursorFocus(&s.spacer)
+		manager.SetCursorFocus(&s.spacer)
 	case OnMouseUp:
+		win, err := window.Get()
+		// ignore error silently
+		if err != nil {
+			return
+		}
 		s.pressed = false
-		window.Get().SetCursor(window.ArrowCursor)
-		Manager().SetCursorFocus(nil)
+		win.SetCursor(window.ArrowCursor)
+		manager.SetCursorFocus(nil)
 	}
 }
 
 // onCursor receives subscribed cursor events over the spacer panel
 func (s *Splitter) onCursor(evname string, ev interface{}) {
-
+	win, err := window.Get()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 	if evname == OnCursorEnter {
 		if s.horiz {
-			window.Get().SetCursor(window.HResizeCursor)
+			win.SetCursor(window.HResizeCursor)
 		} else {
-			window.Get().SetCursor(window.VResizeCursor)
+			win.SetCursor(window.VResizeCursor)
 		}
 		s.mouseOver = true
 		s.update()
 	} else if evname == OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		win.SetCursor(window.ArrowCursor)
 		s.mouseOver = false
 		s.update()
 	} else if evname == OnCursor {

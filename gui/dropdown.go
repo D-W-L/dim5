@@ -155,8 +155,12 @@ func (dd *DropDown) SetStyles(dds *DropDownStyles) {
 
 // onMouse receives subscribed mouse events over the dropdown
 func (dd *DropDown) onMouse(evname string, ev interface{}) {
-
-	Manager().SetKeyFocus(dd.list)
+	manager, err := Manager()
+	// silently ignore error
+	if err != nil {
+		return
+	}
+	manager.SetKeyFocus(dd.list)
 	if evname == OnMouseDown {
 		dd.list.SetVisible(!dd.list.Visible())
 		return

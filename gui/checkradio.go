@@ -142,7 +142,12 @@ func (cb *CheckRadio) toggleState() {
 	// Subscribes once to the root panel for OnRadioGroup events
 	// The root panel is used to dispatch events to all checkradios
 	if !cb.subroot {
-		Manager().Subscribe(OnRadioGroup, func(name string, ev interface{}) {
+		manager, err := Manager()
+		// silently ignore error
+		if err != nil {
+			return
+		}
+		manager.Subscribe(OnRadioGroup, func(name string, ev interface{}) {
 			cb.onRadioGroup(ev.(*CheckRadio))
 		})
 		cb.subroot = true
@@ -163,7 +168,12 @@ func (cb *CheckRadio) toggleState() {
 	cb.update()
 	cb.Dispatch(OnChange, nil)
 	if !cb.check && len(cb.group) > 0 {
-		Manager().Dispatch(OnRadioGroup, cb)
+		manager, err := Manager()
+		// silently ignore error
+		if err != nil {
+			return
+		}
+		manager.Dispatch(OnRadioGroup, cb)
 	}
 }
 
@@ -174,7 +184,12 @@ func (cb *CheckRadio) onMouse(evname string, ev interface{}) {
 	if evname == OnMouseDown {
 		mev := ev.(*window.MouseEvent)
 		if mev.Button == window.MouseButtonLeft && cb.Enabled() {
-			Manager().SetKeyFocus(cb)
+			manager, err := Manager()
+			// silently ignore error
+			if err != nil {
+				return
+			}
+			manager.SetKeyFocus(cb)
 			cb.toggleState()
 			cb.Dispatch(OnClick, nil)
 		}

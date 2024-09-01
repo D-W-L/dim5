@@ -162,7 +162,11 @@ func (s *Slider) setPos(pos float32) {
 
 // onMouse process subscribed mouse events over the outer panel
 func (s *Slider) onMouse(evname string, ev interface{}) {
-
+	manager, err := Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 	if !s.Enabled() {
 		return
 	}
@@ -179,11 +183,11 @@ func (s *Slider) onMouse(evname string, ev interface{}) {
 		} else {
 			s.posLast = mev.Ypos
 		}
-		Manager().SetKeyFocus(s)
-		Manager().SetCursorFocus(s)
+		manager.SetKeyFocus(s)
+		manager.SetCursorFocus(s)
 	case OnMouseUp:
 		s.pressed = false
-		Manager().SetCursorFocus(nil)
+		manager.SetCursorFocus(nil)
 	default:
 		return
 	}
@@ -191,7 +195,11 @@ func (s *Slider) onMouse(evname string, ev interface{}) {
 
 // onCursor process subscribed cursor events
 func (s *Slider) onCursor(evname string, ev interface{}) {
-
+	win, err := window.Get()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 	if !s.Enabled() {
 		return
 	}
@@ -199,14 +207,14 @@ func (s *Slider) onCursor(evname string, ev interface{}) {
 	if evname == OnCursorEnter {
 		s.cursorOver = true
 		if s.horiz {
-			window.Get().SetCursor(window.HResizeCursor)
+			win.SetCursor(window.HResizeCursor)
 		} else {
-			window.Get().SetCursor(window.VResizeCursor)
+			win.SetCursor(window.VResizeCursor)
 		}
 		s.update()
 	} else if evname == OnCursorLeave {
 		s.cursorOver = false
-		window.Get().SetCursor(window.ArrowCursor)
+		win.SetCursor(window.ArrowCursor)
 		s.update()
 	} else if evname == OnCursor {
 		if !s.pressed {

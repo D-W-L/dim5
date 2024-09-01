@@ -72,8 +72,12 @@ func (l *Label) initialize(msg string, font *text.Font) {
 }
 
 // SetText sets and draws the label text using the font.
-func (l *Label) SetText(text string) {
+func (l *Label) SetText(text string) error {
+	win, err := window.Get()
+	if err != nil {
+		return err
 
+	}
 	// Need at least a character to get dimensions
 	l.text = text
 	if text == "" {
@@ -84,7 +88,7 @@ func (l *Label) SetText(text string) {
 	l.font.SetAttributes(&l.style.FontAttributes)
 	l.font.SetColor(&l.style.FgColor)
 
-	scaleX, scaleY := window.Get().GetScale()
+	scaleX, scaleY := win.GetScale()
 	l.font.SetScaleXY(scaleX, scaleY)
 
 	// Create an image with the text
@@ -104,8 +108,9 @@ func (l *Label) SetText(text string) {
 	// Update label panel dimensions
 	width, height := float32(textImage.Rect.Dx()), float32(textImage.Rect.Dy())
 	// since we enlarged the font texture for higher quality, we have to scale it back to it's original point size
-	width, height = width / float32(scaleX), height / float32(scaleY)
+	width, height = width/float32(scaleX), height/float32(scaleY)
 	l.Panel.SetContentSize(width, height)
+	return nil
 }
 
 // Text returns the label text.
@@ -220,13 +225,16 @@ func (l *Label) LineSpacing() float64 {
 // setTextCaret sets the label text and draws a caret at the
 // specified line and column.
 // It is normally used by the Edit widget.
-func (l *Label) setTextCaret(msg string, mx, width int, drawCaret bool, line, col, selStart, selEnd int) {
-
+func (l *Label) setTextCaret(msg string, mx, width int, drawCaret bool, line, col, selStart, selEnd int) error {
+	win, err := window.Get()
+	if err != nil {
+		return err
+	}
 	// Set font properties
 	l.font.SetAttributes(&l.style.FontAttributes)
 	l.font.SetColor(&l.style.FgColor)
 
-	scaleX, scaleY := window.Get().GetScale()
+	scaleX, scaleY := win.GetScale()
 	l.font.SetScaleXY(scaleX, scaleY)
 
 	// Create canvas and draw text
@@ -247,6 +255,7 @@ func (l *Label) setTextCaret(msg string, mx, width int, drawCaret bool, line, co
 	l.tex.SetMinFilter(gls.NEAREST)
 
 	// Updates label panel dimensions
-	l.Panel.SetContentSize(float32(width) / float32(scaleX), float32(height) / float32(scaleY))
+	l.Panel.SetContentSize(float32(width)/float32(scaleX), float32(height)/float32(scaleY))
 	l.text = msg
+	return nil
 }

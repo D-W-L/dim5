@@ -6,6 +6,8 @@
 package camera
 
 import (
+	"fmt"
+
 	"github.com/g3n/engine/core"
 	"github.com/g3n/engine/math32"
 	"github.com/g3n/engine/util/logger"
@@ -34,7 +36,7 @@ const (
 
 // ICamera is the interface for all cameras.
 type ICamera interface {
-	ViewMatrix(m *math32.Matrix4)
+	ViewMatrix(m *math32.Matrix4) error
 	ProjMatrix(m *math32.Matrix4)
 }
 
@@ -228,19 +230,18 @@ func (c *Camera) UpdateSize(targetDist float32) {
 }
 
 // ViewMatrix returns the view matrix of the camera.
-func (c *Camera) ViewMatrix(m *math32.Matrix4) {
-
+func (c *Camera) ViewMatrix(m *math32.Matrix4) error {
 	c.UpdateMatrixWorld()
 	matrixWorld := c.MatrixWorld()
 	err := m.GetInverse(&matrixWorld)
 	if err != nil {
-		panic("Camera.ViewMatrix: Couldn't invert matrix")
+		return fmt.Errorf("Camera.ViewMatrix: Couldn't invert matrix")
 	}
+	return nil
 }
 
 // ProjMatrix returns the projection matrix of the camera.
 func (c *Camera) ProjMatrix(m *math32.Matrix4) {
-
 	if c.projChanged {
 		switch c.proj {
 		case Perspective:
@@ -277,16 +278,18 @@ func (c *Camera) ProjMatrix(m *math32.Matrix4) {
 }
 
 // Project transforms the specified position from world coordinates to this camera projected coordinates.
-func (c *Camera) Project(v *math32.Vector3) *math32.Vector3 {
-
+func (c *Camera) Project(v *math32.Vector3) (*math32.Vector3, error) {
 	// Get camera view matrix
 	var viewMat, projMat math32.Matrix4
-	c.ViewMatrix(&viewMat)
+	err := c.ViewMatrix(&viewMat)
+	if err != nil {
+		return nil, err
+	}
 	c.ProjMatrix(&projMat)
 
 	// Apply projMat * viewMat to the provided vector
 	v.ApplyProjection(projMat.Multiply(&viewMat))
-	return v
+	return v, nil
 }
 
 // Unproject transforms the specified position from camera projected coordinates to world coordinates.

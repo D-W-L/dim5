@@ -142,7 +142,12 @@ func (b *Button) onMouse(evname string, ev interface{}) {
 
 	switch evname {
 	case OnMouseDown:
-		Manager().SetKeyFocus(b)
+		manager, err := Manager()
+		// silently ignore error
+		if err != nil {
+			return
+		}
+		manager.SetKeyFocus(b)
 		b.pressed = true
 		b.update()
 	case OnMouseUpOut:

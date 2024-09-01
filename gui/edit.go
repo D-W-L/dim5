@@ -147,7 +147,12 @@ func (ed *Edit) OnFocusLost(evname string, ev interface{}) {
 
 	ed.focus = false
 	ed.update()
-	Manager().ClearTimeout(ed.blinkID)
+	manager, err := Manager()
+	// silently ignore error
+	if err != nil {
+		return
+	}
+	manager.ClearTimeout(ed.blinkID)
 }
 
 // CursorPos sets the position of the cursor at the
@@ -394,7 +399,7 @@ func (ed *Edit) CursorInput(s string) {
 
 	// Checks if new text exceeds edit width
 	width, _ := ed.Label.font.MeasureText(newText)
-	if float32(width) / float32(ed.Label.font.ScaleX()) + editMarginX + float32(1) >= ed.Label.ContentWidth() {
+	if float32(width)/float32(ed.Label.font.ScaleX())+editMarginX+float32(1) >= ed.Label.ContentWidth() {
 		return
 	}
 
@@ -409,11 +414,16 @@ func (ed *Edit) CursorInput(s string) {
 
 // redraw redraws the text showing the caret if specified
 // the selection caret is always shown (when text is selected)
-func (ed *Edit) redraw(caret bool) {
-
+func (ed *Edit) redraw(caret bool) error {
+	win, err := window.Get()
+	if err != nil {
+		return err
+	}
 	line := 0
-	scaleX, _ := window.Get().GetScale()
-	ed.Label.setTextCaret(ed.text, editMarginX, int(float64(ed.width) * scaleX), caret, line, ed.col, ed.selStart, ed.selEnd)
+	scaleX, _ := win.GetScale()
+	ed.Label.setTextCaret(ed.text, editMarginX, int(float64(ed.width)*scaleX), caret, line, ed.col,
+		ed.selStart, ed.selEnd)
+	return nil
 }
 
 // onKey receives subscribed key events
@@ -488,7 +498,12 @@ func (ed *Edit) onMouseDown(evname string, ev interface{}) {
 	// Otherwise the OnFocus event would fire before the cursor is set.
 	// That way the OnFocus handler could NOT influence the selection
 	// Because it would be overridden/cleared directly afterwards.
-	Manager().SetKeyFocus(ed)
+	manager, err := Manager()
+	// silently ignore error
+	if err != nil {
+		return
+	}
+	manager.SetKeyFocus(ed)
 }
 
 // handleMouse is setting the caret when the mouse is clicked
@@ -500,13 +515,19 @@ func (ed *Edit) handleMouse(mouseX float32, dragged bool) {
 	for nchars = 1; nchars <= text.StrCount(ed.text); nchars++ {
 		width, _ := ed.Label.font.MeasureText(text.StrPrefix(ed.text, nchars))
 		posx := mouseX - ed.pospix.X
-		if posx < editMarginX + float32(float64(width) / ed.Label.font.ScaleX()) {
+		if posx < editMarginX+float32(float64(width)/ed.Label.font.ScaleX()) {
 			break
 		}
 	}
 	if !ed.focus {
 		ed.focus = true
-		ed.blinkID = Manager().SetInterval(750*time.Millisecond, nil, ed.blink)
+		manager, err := Manager()
+		// silently ignore error
+		if err != nil {
+			return
+		}
+
+		ed.blinkID = manager.SetInterval(750*time.Millisecond, nil, ed.blink)
 	}
 	if !dragged {
 		ed.CursorPos(nchars - 1)
@@ -534,15 +555,19 @@ func (ed *Edit) onMouseUp(evname string, ev interface{}) {
 
 // onCursor receives subscribed cursor events
 func (ed *Edit) onCursor(evname string, ev interface{}) {
-
+	win, err := window.Get()
+	// silently ignore error
+	if err != nil {
+		return
+	}
 	if evname == OnCursorEnter {
-		window.Get().SetCursor(window.IBeamCursor)
+		win.SetCursor(window.IBeamCursor)
 		ed.cursorOver = true
 		ed.update()
 		return
 	}
 	if evname == OnCursorLeave {
-		window.Get().SetCursor(window.ArrowCursor)
+		win.SetCursor(window.ArrowCursor)
 		ed.cursorOver = false
 		ed.mouseDrag = false
 		ed.update()
@@ -588,8 +613,12 @@ func (ed *Edit) update() {
 }
 
 // applyStyle applies the specified style
-func (ed *Edit) applyStyle(s *EditStyle) {
+func (ed *Edit) applyStyle(s *EditStyle) error {
+	win, err := window.Get()
+	if err != nil {
+		return err
 
+	}
 	ed.SetBordersFrom(&s.Border)
 	ed.SetBordersColor4(&s.BorderColor)
 	ed.SetPaddingsFrom(&s.Paddings)
@@ -598,11 +627,12 @@ func (ed *Edit) applyStyle(s *EditStyle) {
 	//ed.Label.SetBgAlpha(s.BgAlpha)
 
 	if !ed.focus && len(ed.text) == 0 && len(ed.placeHolder) > 0 {
-		scaleX, _ := window.Get().GetScale()
+		scaleX, _ := win.GetScale()
 		ed.Label.SetColor4(&s.HolderColor)
-		ed.Label.setTextCaret(ed.placeHolder, editMarginX, int(float64(ed.width) * scaleX), false, -1, ed.col, ed.selStart, ed.selEnd)
+		ed.Label.setTextCaret(ed.placeHolder, editMarginX, int(float64(ed.width)*scaleX), false, -1, ed.col, ed.selStart, ed.selEnd)
 	} else {
 		ed.Label.SetColor4(&s.FgColor)
 		ed.redraw(ed.focus)
 	}
+	return nil
 }

@@ -21,12 +21,12 @@ var log = logger.New("WIN", logger.Default)
 var win IWindow
 
 // Get returns the IWindow singleton.
-func Get() IWindow {
+func Get() (IWindow, error) {
 	// Return singleton if already created
 	if win != nil {
-		return win
+		return win, nil
 	}
-	panic(fmt.Errorf("need to call window.Init() first"))
+	return nil, fmt.Errorf("need to call window.Init() first")
 }
 
 // IWindow is the interface for all windows
@@ -37,7 +37,7 @@ type IWindow interface {
 	GetSize() (width int, height int)
 	GetScale() (x float64, y float64)
 	CreateCursor(imgFile string, xhot, yhot int) (Cursor, error)
-	SetCursor(cursor Cursor)
+	SetCursor(cursor Cursor) error
 	DisposeAllCustomCursors()
 	Destroy()
 	FullScreen() bool

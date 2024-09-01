@@ -56,10 +56,8 @@ const (
 	tableErrInvCol      = "Invalid column id"
 )
 
-//
 // Table implements a panel which can contains child panels
 // organized in rows and columns.
-//
 type Table struct {
 	Panel                       // Embedded panel
 	styles         *TableStyles // pointer to current styles
@@ -779,6 +777,11 @@ func (t *Table) removeRow(row int) {
 
 // onCursorPos process subscribed cursor position events
 func (t *Table) onCursorPos(evname string, ev interface{}) {
+	win, err := window.Get()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 
 	// Convert mouse window coordinates to table content coordinates
 	cev := ev.(*window.CursorEvent)
@@ -800,7 +803,7 @@ func (t *Table) onCursorPos(evname string, ev interface{}) {
 				found = true
 				t.resizeCol = ci
 				t.resizerX = c.xr
-				window.Get().SetCursor(window.HResizeCursor)
+				win.SetCursor(window.HResizeCursor)
 			}
 			break
 		}
@@ -808,16 +811,26 @@ func (t *Table) onCursorPos(evname string, ev interface{}) {
 	// If column not found but previously was near a resizable column,
 	// resets the the window cursor.
 	if !found && t.resizeCol >= 0 {
-		window.Get().SetCursor(window.ArrowCursor)
+		win.SetCursor(window.ArrowCursor)
 		t.resizeCol = -1
 	}
 }
 
 // onMouseEvent process subscribed mouse events
 func (t *Table) onMouse(evname string, ev interface{}) {
+	manager, err := Manager()
+	// ignore error silently
+	if err != nil {
+		return
+	}
+	win, err := window.Get()
+	// ignore error silently
+	if err != nil {
+		return
+	}
 
 	e := ev.(*window.MouseEvent)
-	Manager().SetKeyFocus(t)
+	manager.SetKeyFocus(t)
 	switch evname {
 	case OnMouseDown:
 		// If over a resizable column border, shows the resizer panel
@@ -855,7 +868,7 @@ func (t *Table) onMouse(evname string, ev interface{}) {
 		if t.resizing {
 			t.resizing = false
 			t.resizerPanel.SetVisible(false)
-			window.Get().SetCursor(window.ArrowCursor)
+			win.SetCursor(window.ArrowCursor)
 			// Calculates the new column width
 			cx, _ := t.ContentCoords(e.Xpos, e.Ypos)
 			c := t.header.cols[t.resizeCol]

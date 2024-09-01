@@ -26,11 +26,11 @@ type manager struct {
 }
 
 // Manager returns the GUI manager singleton (creating it the first time)
-func Manager() *manager {
+func Manager() (*manager, error) {
 
 	// Return singleton if already created
 	if gm != nil {
-		return gm
+		return gm, nil
 	}
 
 	gm = new(manager)
@@ -38,7 +38,11 @@ func Manager() *manager {
 	gm.TimerManager.Initialize()
 
 	// Subscribe to window events
-	gm.win = window.Get()
+	var err error
+	gm.win, err = window.Get()
+	if err != nil {
+		return nil, err
+	}
 	gm.win.Subscribe(window.OnKeyUp, gm.onKeyboard)
 	gm.win.Subscribe(window.OnKeyDown, gm.onKeyboard)
 	gm.win.Subscribe(window.OnKeyRepeat, gm.onKeyboard)
@@ -48,7 +52,7 @@ func Manager() *manager {
 	gm.win.Subscribe(window.OnMouseDown, gm.onMouse)
 	gm.win.Subscribe(window.OnScroll, gm.onScroll)
 
-	return gm
+	return gm, nil
 }
 
 // Set sets the INode to watch for events.

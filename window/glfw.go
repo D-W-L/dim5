@@ -218,9 +218,9 @@ type GlfwWindow struct {
 // Init initializes the GlfwWindow singleton with the specified width, height, and title.
 func Init(width, height int, title string) error {
 
-	// Panic if already created
+	// is already created
 	if win != nil {
-		panic(fmt.Errorf("can only call window.Init() once"))
+		return fmt.Errorf("can only call window.Init() once")
 	}
 
 	// OpenGL functions must be executed in the same thread where
@@ -449,13 +449,14 @@ func (w *GlfwWindow) SetSwapInterval(interval int) {
 }
 
 // SetCursor sets the window's cursor.
-func (w *GlfwWindow) SetCursor(cursor Cursor) {
+func (w *GlfwWindow) SetCursor(cursor Cursor) error {
 
 	cur, ok := w.cursors[cursor]
 	if !ok {
-		panic("Invalid cursor")
+		return fmt.Errorf("Invalid cursor")
 	}
 	w.Window.SetCursor(cur)
+	return nil
 }
 
 // CreateCursor creates a new custom cursor and returns an int handle.
@@ -480,13 +481,14 @@ func (w *GlfwWindow) CreateCursor(imgFile string, xhot, yhot int) (Cursor, error
 }
 
 // DisposeCursor deletes the existing custom cursor with the provided int handle.
-func (w *GlfwWindow) DisposeCursor(cursor Cursor) {
+func (w *GlfwWindow) DisposeCursor(cursor Cursor) error {
 
 	if cursor <= CursorLast {
-		panic("Can't dispose standard cursor")
+		fmt.Errorf("Can't dispose standard cursor")
 	}
 	w.cursors[cursor].Destroy()
 	delete(w.cursors, cursor)
+	return nil
 }
 
 // DisposeAllCursors deletes all existing custom cursors.

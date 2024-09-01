@@ -866,10 +866,13 @@ func (p *Panel) RenderSetup(gl *gls.GLS, rinfo *core.RenderInfo) {
 }
 
 // SetModelMatrix calculates and sets the specified matrix with the model matrix for this panel
-func (p *Panel) SetModelMatrix(gl *gls.GLS, mm *math32.Matrix4) {
-
+func (p *Panel) SetModelMatrix(gl *gls.GLS, mm *math32.Matrix4) error {
+	manager, err := Manager()
+	if err != nil {
+		return err
+	}
 	// Get scale of window (for HiDPI support)
-	sX, sY := Manager().win.GetScale()
+	sX, sY := manager.win.GetScale()
 
 	// Get the current viewport width and height
 	_, _, width, height := gl.GetViewport()
@@ -886,4 +889,5 @@ func (p *Panel) SetModelMatrix(gl *gls.GLS, mm *math32.Matrix4) {
 		0, 0, 1, p.Position().Z,
 		0, 0, 0, 1,
 	)
+	return nil
 }
