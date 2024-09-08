@@ -9,9 +9,9 @@ package window
 
 import (
 	"fmt"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/util/wasm"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/util/wasm"
 	_ "image/png"
 	"syscall/js"
 )

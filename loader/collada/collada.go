@@ -11,9 +11,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/texture"
+	"github.com/D-W-L/dim5/geometry"
+	"github.com/D-W-L/dim5/material"
+	"github.com/D-W-L/dim5/texture"
 )
 
 // Decoder contains all decoded data from collada file

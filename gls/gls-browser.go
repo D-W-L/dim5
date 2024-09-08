@@ -9,7 +9,7 @@ package gls
 
 import (
 	"fmt"
-	"github.com/g3n/engine/util/wasm"
+	"github.com/D-W-L/dim5/util/wasm"
 	"syscall/js"
 	"unsafe"
 )

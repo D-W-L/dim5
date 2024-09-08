@@ -5,9 +5,9 @@
 package material
 
 import (
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/math32"
-	"github.com/g3n/engine/texture"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/math32"
+	"github.com/D-W-L/dim5/texture"
 )
 
 // Physical is a physically based rendered material which uses the metallic-roughness model.

@@ -1,4 +1,4 @@
-module github.com/g3n/engine
+module github.com/D-W-L/dim5
 
 go 1.13
 

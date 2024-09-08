@@ -6,7 +6,7 @@
 package solver
 
 import (
-	"github.com/g3n/engine/math32"
+	"github.com/D-W-L/dim5/math32"
 )
 
 // GaussSeidel equation solver.

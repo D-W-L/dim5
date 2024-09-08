@@ -8,15 +8,15 @@ package renderer
 import (
 	"sort"
 
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/gui"
-	"github.com/g3n/engine/light"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
-	"github.com/g3n/engine/util/logger"
+	"github.com/D-W-L/dim5/camera"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/graphic"
+	"github.com/D-W-L/dim5/gui"
+	"github.com/D-W-L/dim5/light"
+	"github.com/D-W-L/dim5/material"
+	"github.com/D-W-L/dim5/math32"
+	"github.com/D-W-L/dim5/util/logger"
 )
 
 // Package logger

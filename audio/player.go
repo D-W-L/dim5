@@ -15,10 +15,10 @@ import (
 	"time"
 	"unsafe"
 
-	"github.com/g3n/engine/audio/al"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/math32"
+	"github.com/D-W-L/dim5/audio/al"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/math32"
 )
 
 const (

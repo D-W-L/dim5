@@ -19,15 +19,15 @@ import (
 	"strings"
 	"unsafe"
 
-	"github.com/g3n/engine/animation"
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
-	"github.com/g3n/engine/texture"
+	"github.com/D-W-L/dim5/animation"
+	"github.com/D-W-L/dim5/camera"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/geometry"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/graphic"
+	"github.com/D-W-L/dim5/material"
+	"github.com/D-W-L/dim5/math32"
+	"github.com/D-W-L/dim5/texture"
 )
 
 // ParseJSON parses the glTF data from the specified JSON file

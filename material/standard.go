@@ -5,8 +5,8 @@
 package material
 
 import (
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/math32"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/math32"
 )
 
 // Standard material supports the classic lighting model with

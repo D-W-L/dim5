@@ -12,12 +12,12 @@ import (
 	"syscall/js"
 	"time"
 
-	"github.com/g3n/engine/renderer"
-	"github.com/g3n/engine/window"
+	"github.com/D-W-L/dim5/renderer"
+	"github.com/D-W-L/dim5/window"
 )
 
 // Default canvas id
-const canvasId = "g3n-canvas"
+const canvasId = "dim5-canvas"
 
 // Application
 type Application struct {

@@ -5,10 +5,10 @@
 package graphic
 
 import (
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/geometry"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/material"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/geometry"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/material"
 )
 
 // Points represents a geometry containing only points

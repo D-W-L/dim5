@@ -4,7 +4,7 @@
 
 package window
 
-import "github.com/g3n/engine/core"
+import "github.com/D-W-L/dim5/core"
 
 // KeyState keeps track of the state of all keys.
 type KeyState struct {

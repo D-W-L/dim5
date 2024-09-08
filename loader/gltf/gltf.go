@@ -8,13 +8,13 @@ package gltf
 import (
 	"image"
 
-	"github.com/g3n/engine/animation"
-	"github.com/g3n/engine/camera"
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/graphic"
-	"github.com/g3n/engine/material"
-	"github.com/g3n/engine/math32"
+	"github.com/D-W-L/dim5/animation"
+	"github.com/D-W-L/dim5/camera"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/graphic"
+	"github.com/D-W-L/dim5/material"
+	"github.com/D-W-L/dim5/math32"
 )
 
 // glTF Extensions.
@@ -424,7 +424,7 @@ var TypeSizes = map[string]int{
 	MAT4:   16,
 }
 
-// AttributeName maps the glTF attribute name to the internal g3n attribute type.
+// AttributeName maps the glTF attribute name to the internal dim5 attribute type.
 var AttributeName = map[string]gls.AttribType{
 	"POSITION":   gls.VertexPosition,
 	"NORMAL":     gls.VertexNormal,

@@ -7,7 +7,7 @@ package gui
 import (
 	"image"
 
-	"github.com/g3n/engine/texture"
+	"github.com/D-W-L/dim5/texture"
 )
 
 // Image is a Panel which contains a single Image

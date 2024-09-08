@@ -5,4 +5,4 @@ package assets
 // > go install github.com/go-bindata/go-bindata@latest
 
 //go:generate go-bindata -o data.go -pkg assets fonts cursors
-//go:generate g3nicodes -pkg icon icon/codepoints icon/icodes.go
+//go:generate dim5icodes -pkg icon icon/codepoints icon/icodes.go

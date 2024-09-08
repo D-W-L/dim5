@@ -5,7 +5,7 @@
 package light
 
 import (
-	"github.com/g3n/engine/util/logger"
+	"github.com/D-W-L/dim5/util/logger"
 )
 
 // Package logger

@@ -9,9 +9,9 @@ package window
 import (
 	"fmt"
 
-	"github.com/g3n/engine/core"
-	"github.com/g3n/engine/gls"
-	"github.com/g3n/engine/util/logger"
+	"github.com/D-W-L/dim5/core"
+	"github.com/D-W-L/dim5/gls"
+	"github.com/D-W-L/dim5/util/logger"
 )
 
 // Package logger
@@ -59,7 +59,7 @@ type InputMode int
 // InputMode corresponds to an input mode.
 type CursorMode int
 
-// Cursor corresponds to a g3n standard or user-created cursor icon.
+// Cursor corresponds to a dim5 standard or user-created cursor icon.
 type Cursor int
 
 // Standard cursors for G3N.

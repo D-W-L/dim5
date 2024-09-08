@@ -5,7 +5,7 @@
 package material
 
 import (
-	"github.com/g3n/engine/math32"
+	"github.com/D-W-L/dim5/math32"
 )
 
 // Point material is normally used for single point sprites

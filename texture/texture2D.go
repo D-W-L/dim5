@@ -14,9 +14,9 @@ import (
 	_ "image/png"
 	"os"
 
-	"github.com/g3n/engine/util/logger"
+	"github.com/D-W-L/dim5/util/logger"
 
-	"github.com/g3n/engine/gls"
+	"github.com/D-W-L/dim5/gls"
 )
 
 // Package logger
