@@ -1,4 +1,4 @@
-#####dim5 - Go 3D Game Engine
+### dim5 - Go 3D Game Engine
 
 **dim5** is an OpenGL 3D Game Engine written and for the Go language. The name stands for the fifth dimension, which is after length, height, depth and time, fun 😉.
 
